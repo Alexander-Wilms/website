@@ -14,6 +14,7 @@ from lxml import etree
 from pydantic import BaseModel
 
 from . import config
+import lxml.etree
 
 gi.require_version("AppStream", "1.0")
 from gi.repository import AppStream
@@ -65,7 +66,7 @@ def appstream2dict(appstream_url=None) -> dict[str, dict]:
         r = requests.get(appstream_url, stream=True)
         appstream = gzip.decompress(r.raw.data)
 
-    root = etree.fromstring(appstream)
+    root = etree.fromstring(appstream, parser=lxml.etree.XMLParser(resolve_entities=False))
 
     apps = {}
 
